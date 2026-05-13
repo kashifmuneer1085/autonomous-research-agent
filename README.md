@@ -11,6 +11,15 @@ license: mit
 
 # 🔬 Autonomous AI Research Agent
 
+[![Hugging Face Space](https://img.shields.io/badge/🤗_Spaces-Live_Demo-yellow?style=for-the-badge)](https://huggingface.co/spaces/kashif1085/autonomous-research-agent)
+[![Streamlit App](https://img.shields.io/badge/Streamlit-Live_Demo-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://scoutai.streamlit.app)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+
+**🚀 Try it live:**
+- HuggingFace Spaces (full pipeline): [kashif1085/autonomous-research-agent](https://huggingface.co/spaces/kashif1085/autonomous-research-agent)
+- Streamlit Cloud (lite version): [scoutai.streamlit.app](https://scoutai.streamlit.app)
+
 A production-ready, multi-agent AI system that automatically researches any topic — searching the web, scraping content, analysing findings, and delivering a structured report to Google Docs and Google Sheets.
 
 Built with **LangGraph**, **Groq Llama 3.3 70B**, **FastAPI**, and **Streamlit**.
