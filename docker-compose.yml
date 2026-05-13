@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  # ── FastAPI Backend ──────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: research_agent_api
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data           # Persist reports locally
+      # To enable Google integration, uncomment these and provide the files:
+      # - ./credentials.json:/app/credentials.json:ro
+      # - ./token.json:/app/token.json
+    environment:
+      GROQ_API_KEY:         ${GROQ_API_KEY}
+      GROQ_MODEL:           ${GROQ_MODEL:-llama-3.3-70b-versatile}
+      GROQ_MODEL_STRONG:    ${GROQ_MODEL_STRONG:-llama-3.3-70b-versatile}
+      MAX_SEARCH_RESULTS:   ${MAX_SEARCH_RESULTS:-10}
+      NUM_SEARCH_QUERIES:   ${NUM_SEARCH_QUERIES:-3}
+      LOG_LEVEL:            ${LOG_LEVEL:-INFO}
+      DATA_DIR:             /app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Streamlit Frontend ───────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: research_agent_ui
+    command: streamlit run frontend/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      GROQ_API_KEY:         ${GROQ_API_KEY}
+      GROQ_MODEL:           ${GROQ_MODEL:-llama-3.3-70b-versatile}
+      GROQ_MODEL_STRONG:    ${GROQ_MODEL_STRONG:-llama-3.3-70b-versatile}
+      LOG_LEVEL:            ${LOG_LEVEL:-INFO}
+      DATA_DIR:             /app/data
+      API_BASE_URL:         http://api:8000
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  data:
